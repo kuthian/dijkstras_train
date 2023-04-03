@@ -29,8 +29,8 @@ class board : public QFrame {
   void finished();
 
  public slots:
-  void save();
-  void load();
+  void save(const QString& savefile);
+  void load(const QString& savefile);
   void clear();
   void handle_selection_changed(board_piece_t);
 

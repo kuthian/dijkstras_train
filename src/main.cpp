@@ -20,11 +20,23 @@ int main(int argc, char *argv[])
   QObject::connect(save_action, &QAction::triggered, main_widget,
                    &widget::save);
 
-  QAction *load_action = new QAction("Load");
+  QAction *save_as_action = new QAction("Save As");
+  save_as_action->setShortcut(Qt::ControlModifier + Qt::AltModifier + Qt::Key_S);
+  fileMenu->addAction(save_as_action);
+  QObject::connect(save_as_action, &QAction::triggered, main_widget,
+                   &widget::save_as);
+
+  QAction *open_action = new QAction("Open");
+  open_action->setShortcut(Qt::ControlModifier + Qt::Key_O);
+  fileMenu->addAction(open_action);
+  QObject::connect(open_action, &QAction::triggered, main_widget,
+                   &widget::open);
+
+  QAction *load_action = new QAction("Reload");
   load_action->setShortcut(Qt::ControlModifier + Qt::Key_L);
   fileMenu->addAction(load_action);
   QObject::connect(load_action, &QAction::triggered, main_widget,
-                   &widget::load);
+                   &widget::reload);
 
   main_window.setWindowTitle("Dijkstra's Train");
   main_window.show();

@@ -1,14 +1,13 @@
 #include "widget.h"
 
 #include <QApplication>
-#include <QFrame>
+#include <QFileDialog>
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QPushButton>
 #include <QTextEdit>
 #include <QTextStream>
 #include <sstream>
-#include <stack>
 
 #include "board.h"
 #include "dijkstra.h"
@@ -18,8 +17,6 @@
 widget::widget(QWidget* parent)
     : QWidget(parent), board_(new board), selector_(new selector)
 {
-  connect(this, SIGNAL(save()), board_, SLOT(save()));
-  connect(this, SIGNAL(load()), board_, SLOT(load()));
   connect(board_, SIGNAL(finished()), this, SLOT(finished()));
 
   connect(selector_, SIGNAL(selection_changed(board_piece_t)), board_,
@@ -50,7 +47,46 @@ widget::widget(QWidget* parent)
   layout->addLayout(result_layout, 3, 0, Qt::AlignHCenter);
 
   setLayout(layout);
-  resize(0, 0);
+}
+
+void widget::save()
+{
+  if (!savefile_.isEmpty()) {
+    board_->save(savefile_);
+  }
+  else {
+    save_as();
+  }
+}
+
+void widget::save_as()
+{
+  QString savefile = QFileDialog::getSaveFileName(this, tr("Save File"), "board_state",
+                                                  tr("Save Files (*.sav)"));
+  if (!savefile.isEmpty()) {
+    if (!savefile.endsWith(".sav")) {
+      savefile.append(".sav");
+    }
+    board_->save(savefile);
+    savefile_ = savefile;
+  }
+}
+
+void widget::open()
+{
+  QString savefile = QFileDialog::getOpenFileName(
+      this, tr("Load Save File"), "board_state", tr("Save Files (*.sav)"));
+  if (!savefile.isEmpty()) {
+    board_->load(savefile);
+    savefile_ = savefile;
+  }
+}
+
+void widget::reload()
+{
+  if (!savefile_.isEmpty()) {
+    board_->load(savefile_);
+  }
 }
 
 std::string path_str(const std::deque<vertex>& path)
@@ -121,7 +157,6 @@ void widget::start()
   if (closest_term != std::end(term_distances)) {
   }
   board_->start(shortest_paths.at(closest_term->first));
-
 }
 
 void widget::finished()

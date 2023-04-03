@@ -23,7 +23,7 @@ class node_registry {
   void clear();
 
  private:
-  enum { max_nodes = 50 };
+  enum { max_nodes = 26 };
   const std::string& next_available_key() const;
   std::map<std::string, board_piece*> nodes_;
 };
@@ -83,7 +83,6 @@ board::board(QWidget* parent)
       selector_type_(board_piece_t::terminator)
 {
   setMouseTracking(true);
-  // setFrameStyle(QFrame::Panel | QFrame::Raised);
   setFocusPolicy(Qt::StrongFocus);
   setFixedSize(columns * column_size, rows * row_size);
   setStyleSheet("background-color: rgb(150,150,150)");
@@ -94,7 +93,6 @@ board::board(QWidget* parent)
       squares_[col_i].emplace_back(QPoint(col_i, row_i), squares_);
     }
   }
-  load();
 }
 
 board::~board() = default;
@@ -112,14 +110,15 @@ void board::clear()
   update();
 }
 
-const std::string default_savefile = "board_state.sav";
+void board::save(const QString& savefile)
+{ 
+  board_archiver::save(board_pieces_, savefile.toStdString());
+}
 
-void board::save() { board_archiver::save(board_pieces_, default_savefile); }
-
-void board::load()
+void board::load(const QString& savefile)
 {
   clear();
-  board_archiver::load(board_pieces_, default_savefile);
+  board_archiver::load(board_pieces_, savefile.toStdString());
   for (const auto& bp : board_pieces_) {
     if (is_node(bp->type())) {
       node_registry_->register_node(bp.get());
@@ -484,6 +483,7 @@ void board::timerEvent(QTimerEvent* event)
     current->piece()->set_train_dir(navigator_->dir());
   }
   if (navigator_->finished()) {
+    train_ = nullptr;
     killTimer(timer_id);
     finished();
   }
