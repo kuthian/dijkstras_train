@@ -1,7 +1,7 @@
 #include "board.h"
 
-#include <QDebug>
 #include <QKeyEvent>
+#include <QMessageBox>
 #include <QLabel>
 #include <QPainter>
 #include <QThread>
@@ -20,6 +20,7 @@ class node_registry {
   board_piece* get_node(const std::string &key) const;
   void register_node(board_piece*);
   void deregister_node(board_piece*);
+  bool full() const;
   void clear();
 
  private:
@@ -51,6 +52,13 @@ const std::string & node_registry::next_available_key() const
   auto available_key = [](const auto& n) { return n.second == nullptr; };
   auto itr = std::find_if(std::begin(nodes_), std::end(nodes_), available_key);
   return itr->first;
+}
+
+bool node_registry::full() const
+{
+  auto available_key = [](const auto& n) { return n.second == nullptr; };
+  auto itr = std::find_if(std::begin(nodes_), std::end(nodes_), available_key);
+  return itr == std::end(nodes_);
 }
 
 void node_registry::register_node(board_piece* piece)
@@ -285,6 +293,10 @@ bool board::try_add_piece(board_square& square)
     {
       case board_piece_t::junction:
       case board_piece_t::terminator:
+        if (node_registry_->full()) {
+          QMessageBox::warning(this, "Oops!", "Node limit reached, cannot add new node.");
+          return false;
+        }
         // Junctions and terminators (nodes) can be placed anywhere
         // and have no set orientation.
         piece_added = std::make_unique<board_piece>(selector_type_);
