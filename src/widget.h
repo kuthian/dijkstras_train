@@ -26,6 +26,7 @@ class widget : public QWidget {
   QPushButton* clear_button_;
   QTextEdit *result_;
   QString savefile_;
+  QString destination_;
 };
 
 #endif

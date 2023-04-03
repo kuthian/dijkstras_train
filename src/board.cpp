@@ -475,17 +475,18 @@ void board::mousePressEvent(QMouseEvent* event)
 
 void board::timerEvent(QTimerEvent* event)
 {
-  if (board_square* previous = navigator_->current()) {
-    previous->piece()->set_train_dir(direction_t::none);
-  }
-  navigator_->step();
-  if (board_square* current = navigator_->current()) {
-    current->piece()->set_train_dir(navigator_->dir());
-  }
   if (navigator_->finished()) {
     train_ = nullptr;
     killTimer(timer_id);
     finished();
+  } else {
+    if (board_square* previous = navigator_->current()) {
+      previous->piece()->set_train_dir(direction_t::none);
+    }
+    navigator_->step();
+    if (board_square* current = navigator_->current()) {
+      current->piece()->set_train_dir(navigator_->dir());
+    }
   }
   update();
 }

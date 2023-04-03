@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QGridLayout>
 #include <QHBoxLayout>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QTextEdit>
 #include <QTextStream>
@@ -61,8 +62,8 @@ void widget::save()
 
 void widget::save_as()
 {
-  QString savefile = QFileDialog::getSaveFileName(this, tr("Save File"), "board_state",
-                                                  tr("Save Files (*.sav)"));
+  QString savefile = QFileDialog::getSaveFileName(
+      this, tr("Save File"), "board_state", tr("Save Files (*.sav)"));
   if (!savefile.isEmpty()) {
     if (!savefile.endsWith(".sav")) {
       savefile.append(".sav");
@@ -154,14 +155,21 @@ void widget::start()
   selector_->setEnabled(false);
   board_->setEnabled(false);
 
-  if (closest_term != std::end(term_distances)) {
-  }
+  destination_ = QString(closest_term->first.c_str());
   board_->start(shortest_paths.at(closest_term->first));
 }
 
 void widget::finished()
 {
   QApplication::restoreOverrideCursor();
+
+  QMessageBox msgBox(this);
+  msgBox.setWindowTitle("You have arrived!");
+  msgBox.setText(QString("Congratulations, you have arrived at <b>Terminal %1</b>!")
+                     .arg(destination_));
+  msgBox.setStandardButtons(QMessageBox::Ok);
+  msgBox.exec();
+
   start_button_->setEnabled(true);
   clear_button_->setEnabled(true);
   selector_->setEnabled(true);
