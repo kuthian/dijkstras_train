@@ -489,6 +489,7 @@ void board::mousePressEvent(QMouseEvent* event)
 void board::timerEvent(QTimerEvent* event)
 {
   if (navigator_->finished()) {
+    train_->set_train_dir(direction_t::none);
     train_ = nullptr;
     killTimer(timer_id);
     finished();
@@ -498,7 +499,8 @@ void board::timerEvent(QTimerEvent* event)
     }
     navigator_->step();
     if (board_square* current = navigator_->current()) {
-      current->piece()->set_train_dir(navigator_->dir());
+      train_ = current->piece();
+      train_->set_train_dir(navigator_->dir());
     }
   }
   update();
