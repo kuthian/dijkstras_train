@@ -14,25 +14,25 @@ int main(int argc, char *argv[])
 
   auto fileMenu = main_window.menuBar()->addMenu("&File");
 
-  QAction *save_action = new QAction("Save");
+  QAction *save_action = new QAction("Save", fileMenu);
   save_action->setShortcuts(QKeySequence::Save);
   fileMenu->addAction(save_action);
   QObject::connect(save_action, &QAction::triggered, main_widget,
                    &widget::save);
 
-  QAction *save_as_action = new QAction("Save As");
+  QAction *save_as_action = new QAction("Save As", fileMenu);
   save_as_action->setShortcut(Qt::ControlModifier + Qt::AltModifier + Qt::Key_S);
   fileMenu->addAction(save_as_action);
   QObject::connect(save_as_action, &QAction::triggered, main_widget,
                    &widget::save_as);
 
-  QAction *open_action = new QAction("Open");
+  QAction *open_action = new QAction("Open", fileMenu);
   open_action->setShortcut(Qt::ControlModifier + Qt::Key_O);
   fileMenu->addAction(open_action);
   QObject::connect(open_action, &QAction::triggered, main_widget,
                    &widget::open);
 
-  QAction *load_action = new QAction("Reload");
+  QAction *load_action = new QAction("Reload", fileMenu);
   load_action->setShortcut(Qt::ControlModifier + Qt::Key_L);
   fileMenu->addAction(load_action);
   QObject::connect(load_action, &QAction::triggered, main_widget,

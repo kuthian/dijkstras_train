@@ -113,13 +113,13 @@ void widget::start()
   dijkstra_calculator dijkstra;
   dijkstra.calculate(*graph, {"S"});
 
-  const std::map<vertex, int>& distances = dijkstra.distances();
-  const std::map<vertex, std::deque<vertex>>& shortest_paths =
+  const std::unordered_map<vertex, int>& distances = dijkstra.distances();
+  const std::unordered_map<vertex, std::deque<vertex>>& shortest_paths =
       dijkstra.shortest_paths();
 
   const std::vector<vertex> terminators = board_->terminators();
 
-  std::map<vertex, int> term_distances;
+  std::unordered_map<vertex, int> term_distances;
   for (const vertex& t : terminators) {
     if (distances.count(t)) {
       term_distances[t] = distances.at(t);

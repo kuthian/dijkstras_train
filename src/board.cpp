@@ -180,12 +180,13 @@ bool board::initialize()
   if (!train_) return false;
 
   digraph_.reset();
-  std::map<board_square*, std::map<board_square*, direction_t> > navigation_map;
+  std::unordered_map<board_square*, 
+      std::unordered_map<board_square*, direction_t> > navigation_map;
 
   find_edge_op find_edge;
   std::vector<edge> edges;
 
-  std::set<board_square*> visited;
+  std::unordered_set<board_square*> visited;
   auto not_visited = [&visited] (board_square* b) { 
     return visited.count(b) == 0;
   };
@@ -254,7 +255,7 @@ bool board::initialize()
 
   digraph_.emplace(edges);
 
-  navigator_ = std::make_unique<navigator>(navigation_map);
+  navigator_ = std::make_unique<navigator>(std::move(navigation_map));
 
   return true;
 }

@@ -1,11 +1,11 @@
 #include "navigator.h"
 
 navigator::navigator(
-    const std::map<board_square*, std::map<board_square*, direction_t> >& map)
+    const std::unordered_map<board_square*, std::unordered_map<board_square*, direction_t> >&& map)
     : next_(direction_t::none),
       pos_(nullptr),
       dest_(nullptr),
-      navigation_map_(map)
+      navigation_map_(std::move(map))
 {
 }
 
@@ -23,8 +23,10 @@ void navigator::step()
   pos_ = next_(pos_);
   if (pos_ == dest_) {
     path_.pop_front();
-    dest_ = path_.front();
-    direction_t next_dir = navigation_map_[pos_][dest_];
-    next_ = next_square_op(next_dir);
+    if (!path_.empty()) {
+      dest_ = path_.front();
+      direction_t next_dir = navigation_map_[pos_][dest_];
+      next_ = next_square_op(next_dir);
+    }
   }
 };

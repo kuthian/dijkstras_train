@@ -8,7 +8,7 @@ void dijkstra_calculator::calculate(const digraph& G, const vertex& S)
 {
   distances_.clear();
 
-  std::map<vertex, vertex> parents;
+  std::unordered_map<vertex, vertex> parents;
 
   for (const vertex& V : G.vertices()) {
     distances_[V] = std::numeric_limits<int>::max();

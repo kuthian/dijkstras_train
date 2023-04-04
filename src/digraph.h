@@ -1,8 +1,8 @@
 #ifndef DIGRAPH_H
 #define DIGRAPH_H
 
-#include <map>
-#include <set>
+#include <unordered_map>
+#include <unordered_set>
 #include <string>
 #include <vector>
 
@@ -25,7 +25,7 @@ class digraph {
  public:
   digraph(const std::vector<edge> &edges);
 
-  using adjacency_map = std::map<vertex, std::vector<weighted_path>>;
+  using adjacency_map = std::unordered_map<vertex, std::vector<weighted_path>>;
 
   adjacency_map::const_iterator begin() const { return std::begin(adjacency_); }
   adjacency_map::const_iterator end() const { return std::end(adjacency_); }
@@ -35,11 +35,11 @@ class digraph {
     return adjacency_.at(v);
   }
 
-  const std::set<vertex> &vertices() const { return vertices_; };
+  const std::unordered_set<vertex> &vertices() const { return vertices_; };
 
  private:
   adjacency_map adjacency_;
-  std::set<vertex> vertices_;
+  std::unordered_set<vertex> vertices_;
 };
 
 #endif

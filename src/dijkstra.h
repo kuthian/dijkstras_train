@@ -17,13 +17,13 @@ class dijkstra_calculator {
   void calculate(const digraph& G, const vertex& S);
 
   // @return Distances to all vertices from vertex S.
-  const std::map<vertex, int>& distances() const { return distances_; }
+  const std::unordered_map<vertex, int>& distances() const { return distances_; }
   // @return Shortest paths to all vertices from vertex S.
-  const std::map <vertex, std::deque<vertex>>& shortest_paths() const { return shortest_paths_; }
+  const std::unordered_map <vertex, std::deque<vertex>>& shortest_paths() const { return shortest_paths_; }
 
  private:
-  std::map<vertex, int> distances_;
-  std::map<vertex, std::deque<vertex> > shortest_paths_;
+  std::unordered_map<vertex, int> distances_;
+  std::unordered_map<vertex, std::deque<vertex> > shortest_paths_;
 };
 
 #endif
