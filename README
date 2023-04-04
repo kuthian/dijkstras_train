@@ -1,0 +1,19 @@
+## Dependencies on Qt5 and cereal
+apt install qtbase5-dev qt5-qmake
+apt install libcereal-dev
+
+## Build instructions
+mkdir build
+cd build
+cmake ..
+make dijkstras_train
+
+## Rules & Controls
+Left-click to place board pieces.
+Right-click to remove board pieces.
+Terminators and junctions can be placed on any unoccupied square.
+Tracks can only be placed alongside a junction, terminator, or another track.
+Trains can be placed on tracks.
+Clicking on a train flips its direction.
+
+Try loading some of the examples provided to get started, or create your own!
